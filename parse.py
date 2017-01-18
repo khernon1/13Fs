@@ -1,46 +1,66 @@
-# import requests
-# from bs4 import BeautifulSoup
-# import pdb
-
-# url = 'https://www.sec.gov/Archives/edgar/data/728100/000093041316008673/0000930413-16-008673.txt'
-# page = requests.get(url)
-# page_text = page.text
-
-from string import strip
 import xmltodict
 import urllib2
-import untangle
 import pdb
-import itertools
-
-import xml.etree.ElementTree as ET
+import csv
 from lxml import etree
-from xml.dom import minidom
-import json
 
-url = ('https://www.sec.gov/Archives/edgar/data/1166559/000110465914039387/0001104659-14-039387.txt')
+class Get13Fs:
 
-parser = etree.XMLParser(recover=True) # recover from bad characters
-data = urllib2.urlopen(url)
-root = etree.fromstring(data.read(), parser=parser)
-for element in root.iter():
-  if element.tag == '{http://www.sec.gov/edgar/document/thirteenf/informationtable}infoTable':
+  def __init__(self):
+    self.all_holdings_list = []  
+    self.url = ('https://www.sec.gov/Archives/edgar/data/1029160/000114036116086458/0001140361-16-086458.txt')
+    self.get_data()
+
+  def get_data(self):
+    parser = etree.XMLParser(recover=True) # recover from bad characters
+    data = urllib2.urlopen(self.url) # open site
+    root = etree.fromstring(data.read(), parser=parser) #parse the response data
+
+    counter = 0
+    for element in root.iter():
+      if element.tag == '{http://www.sec.gov/edgar/document/thirteenf/informationtable}infoTable':
+        if counter == 0: self.add_header(element)
+        self.add_one_holding(element)
+        counter += 1
+
+    self.build_file()
+  
+  def add_header(self, element):
     doc = xmltodict.parse(etree.tostring(element))
-    print_list = []
+    one_holding_list = []
     for item in doc['infoTable'].items():      
-    # merged = list(itertools.chain(*doc['infoTable'].values()))
-    # json_str = json.dumps(doc['infoTable'])
-    # json_dict = json.loads(json_str)
-    # print doc['infoTable']['cusip']
       if isinstance(item[1], dict):
-        print_list.append(item[1].values())
+        one_holding_list.append(item[1].keys())
+      elif '@xmlns' in item[0]:
+        continue
       else:
-        print_list.append([item[1]])
-    # flatten nested list 
-    merged = [val for sublist in print_list for val in sublist]
-    # pdb.set_trace()
-    print ('\t'.join(merged[2:-1]))
+        one_holding_list.append([item[0]])
+    self.all_holdings_list.append(one_holding_list)
+
+
+  def add_one_holding(self, element):
+    doc = xmltodict.parse(etree.tostring(element))
+    one_holding_list = []
+    for item in doc['infoTable'].items():      
+      if isinstance(item[1], dict):
+        one_holding_list.append(item[1].values())
+      elif '@xmlns' in item[0]:
+        continue
+      else:
+        if item[0] in (y for x in self.all_holdings_list[0] for y in x):
+          pdb.set_trace()
+          one_holding_list.append([item[1]])
+    self.all_holdings_list.append(one_holding_list)
+
+
+  def build_file(self):
+    with open('data.csv', 'wb') as f:
+      writer = csv.writer(f)
+      for line in self.all_holdings_list:
+        merged = [val for sublist in line for val in sublist]
+        writer.writerow(['\t'.join(merged)])
+    f.close()
     
 
-
+Get13Fs()
 
