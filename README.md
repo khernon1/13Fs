@@ -13,3 +13,8 @@ iterate through each other dict
 if header exists in keys
 add item value
 otherwise add ''
+
+
+need to create header first
+
+check why headers is nested list
