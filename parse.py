@@ -79,9 +79,12 @@ class Get13Fs:
         one_holding_list[item[0]] = item[1]
         # one_holding_list.append([item[1]])
     # self.all_holdings_list.update(one_holding_list)
-    issuer = one_holding_list['cusip']
-    self.add_header(one_holding_list)
-    self.all_holdings_list[issuer] = one_holding_list
+
+################# make change here so don't dup
+    counter = str(len(self.all_holdings_list))
+    # issuer = one_holding_list['cusip']
+    self.add_header(one_holding_list)    
+    self.all_holdings_list[counter] = one_holding_list
 
   def build_file(self):
     with open('data.csv', 'wb') as f:

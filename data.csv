@@ -1,4 +1,4 @@
-nameOfIssuer	titleOfClass	cusip	value	sshPrnamt	sshPrnamtType	investmentDiscretion	Sole	Shared	None
+nameOfIssuer	titleOfClass	cusip	value	shrsOrPrnAmt - sshPrnamt	shrsOrPrnAmt - sshPrnamtType	investmentDiscretion	votingAuthority - Sole	votingAuthority - Shared	votingAuthority - None
 AFLAC INC COM	COM	001055102	21319	296629	SH	SOLE	296629	0	0
 AES CORP COM	COM	00130H105	14555	1132700	SH	SOLE	1132700	0	0
 AK STL CORP NOTE 5.000%11/1	CV	001546AP5	5407	4501000	PRN	SOLE	4501000	0	0
