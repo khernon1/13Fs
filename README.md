@@ -18,3 +18,5 @@ otherwise add ''
 need to create header first
 
 check why headers is nested list
+
+make sure last column is not empty on any
