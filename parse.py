@@ -1,3 +1,8 @@
+"""
+Please see a further description and a short video in 
+the README on my github repo at https://github.com/khernon1/13Fs
+"""
+
 from lxml import etree
 import xmltodict
 import urllib2
